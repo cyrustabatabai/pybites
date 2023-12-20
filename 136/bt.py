@@ -36,6 +36,17 @@ blood_type_text = {
     "AB+": Bloodtype.AB_POS,
 }
 
+
+strings = list(blood_type_text.keys())
+
+blood_type_to_text = {value: key for key,value in blood_type_text.items()}
+
+
+
+
+
+
+
 # complete :
 def check_bt(donor, recipient):
     """ Checks red blood cell compatibility based on 8 blood types
@@ -48,32 +59,73 @@ def check_bt(donor, recipient):
 
     # check validitiy
     values = (donor,recipient)
-
+    
+    bloods_have = []
     for value in values:
-        if type(value) not in (str,Bloodtype,int):
-            raise TypeError()
-
-
-        if (type(value) == str and value not in blood_type_text) or (type(value) == int and (not ( 0<= value <= 7))): 
-                raise ValueError()
-
+        value_as_str = check_validity(value)
 
     
+        last = value_as_str[-1]
 
-    if type(donor) == str:
-        donor = blood_type_text[donor].value
+        bloods = value_as_str[:-1]
+        
+        has = set()
+        if last == '+':
+            has.add('R')
+        if bloods[0] == 'B':
+            has.add('B')
+        elif bloods[0] == 'A':
+            has.add('A')
+            if len(bloods) == 2:
+                has.add('B')
 
-    if type(recipient) == str:
-        recipient = blood_type_text[recipient].value
 
-    if type(donor) == Bloodtype:
-        donor = donor.value
-    if type(recipient) == Bloodtype:
-        recipient = recipient.value
+        bloods_have.append(has.copy())
 
 
-    return  all(value >= 0 for value in _particular_antigen_comp(int(donor),int(recipient)))
+
+    donor,recipient = bloods_have
+
+
+    for antigen in donor:
+        if antigen not in recipient:
+            return False
+
+    return True
+
+
+
+
+
+
+
          
+
+
+def check_validity(value):
+
+
+    if type(value) not in (str,Bloodtype,int):
+        raise TypeError
+
+
+    if type(value) == str:
+        if value in blood_type_text: 
+            return value
+
+        raise ValueError
+
+
+    if type(value) == Bloodtype:
+        return blood_type_to_text[value] 
+
+
+
+    if not (0 <= value <= 7):
+        raise ValueError("Not in interval")
+
+
+    return strings[value]
 
 
 
