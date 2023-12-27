@@ -1,4 +1,13 @@
 def get_index_different_char(chars):
+    
+
+
+
+
+
+
+
+
 
 
     counts = {True:0 ,False:0}

@@ -16,17 +16,20 @@ Halbard,Davie,CN"""
 
 
 def group_names_by_country(data: str = data) -> defaultdict:
+
     countries = defaultdict(list)
 
 
-    for line in data.splitlines()[1:]:
-        line = line.strip()
-
-        last,first,country = line.split(',')
-        countries[country].append(f"{first} {last}")
 
 
-    return countries
+
+    for k,g in groupby(data.split('\n')[1:],lambda x: x.split(',')[-1]):
+        print(k,list(g))
+
+
+
         
 
+if __name__ == "__main__":
 
+    group_names_by_country()
